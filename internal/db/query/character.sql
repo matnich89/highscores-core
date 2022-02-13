@@ -15,3 +15,8 @@ WHERE name = $1;
 -- name: GetCharacter :one
 SELECT * FROM characters
 WHERE id = $1;
+
+-- name: UpdateCharacter :exec
+UPDATE characters
+SET last_check = $2
+WHERE  id = $1;

@@ -33,7 +33,7 @@ type CreateXpRecordParams struct {
 	CreatedAt    time.Time
 }
 
-func (q *Queries) CreateXpRecord(ctx context.Context, arg CreateXpRecordParams) (XpRecords, error) {
+func (q *Queries) CreateXpRecord(ctx context.Context, arg CreateXpRecordParams) (XpRecord, error) {
 	row := q.db.QueryRowContext(ctx, createXpRecord,
 		arg.Skill,
 		arg.CharacterID,
@@ -43,7 +43,7 @@ func (q *Queries) CreateXpRecord(ctx context.Context, arg CreateXpRecordParams) 
 		arg.UpdatedAt,
 		arg.CreatedAt,
 	)
-	var i XpRecords
+	var i XpRecord
 	err := row.Scan(
 		&i.ID,
 		&i.Skill,
@@ -67,9 +67,9 @@ type GetXpRecordParams struct {
 	CharacterID int64
 }
 
-func (q *Queries) GetXpRecord(ctx context.Context, arg GetXpRecordParams) (XpRecords, error) {
+func (q *Queries) GetXpRecord(ctx context.Context, arg GetXpRecordParams) (XpRecord, error) {
 	row := q.db.QueryRowContext(ctx, getXpRecord, arg.Skill, arg.CharacterID)
-	var i XpRecords
+	var i XpRecord
 	err := row.Scan(
 		&i.ID,
 		&i.Skill,
@@ -102,7 +102,7 @@ type UpdateXpRecordParams struct {
 	UpdatedAt    time.Time
 }
 
-func (q *Queries) UpdateXpRecord(ctx context.Context, arg UpdateXpRecordParams) (XpRecords, error) {
+func (q *Queries) UpdateXpRecord(ctx context.Context, arg UpdateXpRecordParams) (XpRecord, error) {
 	row := q.db.QueryRowContext(ctx, updateXpRecord,
 		arg.CharacterID,
 		arg.Skill,
@@ -111,7 +111,7 @@ func (q *Queries) UpdateXpRecord(ctx context.Context, arg UpdateXpRecordParams) 
 		arg.LastPosition,
 		arg.UpdatedAt,
 	)
-	var i XpRecords
+	var i XpRecord
 	err := row.Scan(
 		&i.ID,
 		&i.Skill,

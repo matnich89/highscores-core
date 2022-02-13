@@ -25,9 +25,9 @@ type CreateCharacterParams struct {
 	CreatedAt time.Time
 }
 
-func (q *Queries) CreateCharacter(ctx context.Context, arg CreateCharacterParams) (Characters, error) {
+func (q *Queries) CreateCharacter(ctx context.Context, arg CreateCharacterParams) (Character, error) {
 	row := q.db.QueryRowContext(ctx, createCharacter, arg.Name, arg.LastCheck, arg.CreatedAt)
-	var i Characters
+	var i Character
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -42,9 +42,9 @@ SELECT id, name, last_check, created_at FROM characters
 WHERE id = $1
 `
 
-func (q *Queries) GetCharacter(ctx context.Context, id int64) (Characters, error) {
+func (q *Queries) GetCharacter(ctx context.Context, id int64) (Character, error) {
 	row := q.db.QueryRowContext(ctx, getCharacter, id)
-	var i Characters
+	var i Character
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -59,9 +59,9 @@ SELECT id, name, last_check, created_at FROM characters
 WHERE name = $1
 `
 
-func (q *Queries) GetCharacterByName(ctx context.Context, name string) (Characters, error) {
+func (q *Queries) GetCharacterByName(ctx context.Context, name string) (Character, error) {
 	row := q.db.QueryRowContext(ctx, getCharacterByName, name)
-	var i Characters
+	var i Character
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -69,4 +69,20 @@ func (q *Queries) GetCharacterByName(ctx context.Context, name string) (Characte
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const updateCharacter = `-- name: UpdateCharacter :exec
+UPDATE characters
+SET last_check = $2
+WHERE  id = $1
+`
+
+type UpdateCharacterParams struct {
+	ID        int64
+	LastCheck time.Time
+}
+
+func (q *Queries) UpdateCharacter(ctx context.Context, arg UpdateCharacterParams) error {
+	_, err := q.db.ExecContext(ctx, updateCharacter, arg.ID, arg.LastCheck)
+	return err
 }

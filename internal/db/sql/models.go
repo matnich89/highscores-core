@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-type Characters struct {
+type Character struct {
 	ID        int64
 	Name      string
 	LastCheck time.Time
 	CreatedAt time.Time
 }
 
-type XpRecords struct {
+type XpRecord struct {
 	ID           int64
 	Skill        string
 	CharacterID  int64
