@@ -1,37 +1,16 @@
 package main
 
 import (
-	"log"
-	"net"
+	"highscores-core/cmd/server/rpc"
+	"highscores-core/internal/logger"
 )
 
 func main() {
-
-	listener, err := net.Listen("tcp", "127.0.0.1:7777")
-
-	if err != nil {
-		log.Fatalln("could not create listener")
-		return
+	cfg := NewConfig(":50051")
+	app := &application{
+		logger: &logger.Logger{},
+		config: cfg,
+		server: &rpc.CoreServiceServer{},
 	}
-
-	for {
-		conn, err := listener.Accept()
-
-		if err != nil {
-			log.Println("could not handle connection")
-		}
-
-		go handleConnection(conn)
-
-	}
+	app.listen()
 }
-
-func handleConnection(conn net.Conn) {
-	defer conn.Close()
-	buf := make([]byte, 2048)
-	conn.Read(buf)
-	log.Println(string(buf))
-
-}
-
-
